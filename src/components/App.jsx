@@ -36,11 +36,8 @@ const onSubmit = query => {
    };
   
   useEffect(() => {
-    if (query === "") { return; }
-  
-  
-  
-  const getImages = async (query, page) => {
+    const getImages = async () => {
+     if (query === "") { return; }
     setNotFound(false);
     setError(null);
     setIsLoading(true);
@@ -76,7 +73,7 @@ const onSubmit = query => {
       setIsLoading(false);
     }
     }
-    getImages(query, page);}, [query, page]);
+    getImages();}, [query, page]);
   const nextPage = () => {
     setPage(page + 1);
   /*  console.log(page) */
