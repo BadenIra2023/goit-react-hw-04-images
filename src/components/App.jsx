@@ -54,8 +54,7 @@ const onSubmit = query => {
     const imagesQuantity = response.totalHits
         setImageIn(imagesQuantity)
    /*   console.log(imagesQuantity) */
-    
-      if (imagesQuantity === 0) {
+      if (imagesQuantity === 0 || notFound) {
          Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
         return;};
         if (page === 1) {
