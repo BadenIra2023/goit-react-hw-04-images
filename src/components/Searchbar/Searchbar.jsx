@@ -1,31 +1,28 @@
-import React, { Component } from 'react';
+import  { useState } from 'react';
 import css from './Searcnbar.module.css';
 import PropTypes from 'prop-types';
 import Notiflix from 'notiflix';
 
-export class Searchbar extends Component {
-   state = {
-    query: '',
+export const Searchbar = ({onSubmit}) => {
+   const [query, setQuery] = useState('');
+const onChange = event => {
+  setQuery(event.target.value.trim());
+  console.log(event.target.value.trim())
   };
-   onChange = event => {
-     this.setState({ query: event.target.value.trim() });
-  };
-  onSubmit = event => {
+const onForm = event => {
     event.preventDefault();
-    const { query } = this.state;
     if (query === ""){
        Notiflix.Notify.info("The search bar cannot be empty. Please type criteria in the search bar")
       return;
     }
     
-    this.props.onSubmit(query);
-    this.setState({ query:"" });
+    onSubmit(query);
+    setQuery(""); 
   };
 
-  render() {
     return (
         <header className={css.searchbar}>
-  <form className={css.form} onSubmit={this.onSubmit}>
+  <form className={css.form} onSubmit={event => onForm(event)}>
     <button type="submit" className={css.button}>
       <span className={css.buttonlabel}>Search</span>
           </button>
@@ -34,14 +31,14 @@ export class Searchbar extends Component {
       className={css.input}
       type="text"
       name="query"
-      onChange={this.onChange}
+      onChange={onChange}
       placeholder="Search images and photos"
     />
   </form>
 </header>
     )
   }
-}
+
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };

@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { Searchbar } from "./Searchbar/Searchbar";
-import { Component } from "react";
 import { fetchImgs } from "./api";
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Loader } from "./Loader/Loader";
@@ -8,8 +8,8 @@ import {Modal} from "./Modal/Modal";
 import Notiflix from 'notiflix';
 
 
-export class App extends Component {
-  state = {
+export const App = () =>  {
+/*  state = {
   images: [],
   query: "",
   page: 1,
@@ -18,73 +18,81 @@ export class App extends Component {
   notFound: false,
   isLoading: false,
   imageInModal: null,
-  }
- onSubmit = query => {
-    this.setState({
-      images: [],
-      query,
-      page: 1,
-    });
-  };
-  
-  
+  }*/
+const [images, setImages] = useState([]);
+const [query, setGuery] = useState("");
+const [page, setPage] = useState(1);
+const [error, setError] = useState(null);
+const [totalPage, setTotalPage] = useState(0);
+const [notFound, setNotFound] = useState(false);
+const [isLoading, setIsLoading] = useState(false);
+const [imageInModal, setImageInModal] = useState(0);
 
-  async componentDidUpdate(prevProps, prevState) {
-    const {query, page}  = this.state;
-    if (prevState.query !== query || prevState.page !== page) {
-      await this.getImages(query, page);
-    }}
-   getImages = async (query, page) => {
-    if (!query) { return }
-    this.setState({ loading: true });
+  
+const onSubmit = query => {
+    setImages([]);
+    setGuery(query);
+    setPage(1);
+   };
+  
+  useEffect(() => {
+    if (query === "") { return; }
+  getImages(query, page);}, [query, page]);
+  
+  
+  const getImages = async (query, page) => {
+    setNotFound(false);
+    setError(null);
+    setIsLoading(true);
     try {
         const response = await fetchImgs(query, page)
-        const apiImages = response.hits;
-        this.setState(prevState => ({
-        images: [...prevState.images, ...apiImages],
-        notFound: false,
-        imagesQuantity: response.totalHits,
-        }));
-      const imagesQuantity = response.totalHits
-         if (imagesQuantity === 0) {
+      const apiImages = response.hits;
+      
+        setImages(prevState => [...prevState, ...apiImages]);
+      /* console.log(images) */
+      setNotFound(false);
+    const imagesQuantity = response.totalHits
+        setImageIn(imagesQuantity)
+   /*   console.log(imagesQuantity) */
+    
+      if (imagesQuantity === 0) {
          Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
         return;};
         if (page === 1) {
-        Notiflix.Notify.success(`Hooray! We found ${imagesQuantity} images.`);
-          this.setState({totalPage: Math.ceil(imagesQuantity / 12),});
+          Notiflix.Notify.success(`Hooray! We found ${imagesQuantity} images.`);
+          const www = Math.ceil(imagesQuantity / 12)
+          setTotalPage( www );
          };
-      if (page < this.state.totalPage) {
+      if (page < totalPage) {
         Notiflix.Notify.success(`Hooray! We found ${imagesQuantity} images. Still available for viewing ${imagesQuantity-12*page}`)
       }
-      if (page === this.state.totalPage){
+      if (page === totalPage){
       Notiflix.Notify.warning(
         "We're sorry, but you've reached the end of search results."
       ); } }
     catch (error) {
       Notiflix.Notify.failure("Something went wrong. Please try again.");
-      this.setState({
-        error: error
-      }); console.log(error.message)}
+      setError(error); console.log(error)}
     finally {
-      this.setState({
-      isLoading: false,
-      });
+      setIsLoading(false);
     }
   }
-  nextPage = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
+  const nextPage = () => {
+    setPage(page + 1);
+  /*  console.log(page) */
   };
-  onOpenModal = event => {
-    const imageInModal = event.target.dataset.url;
-    this.setState({ imageInModal: imageInModal });
+  const onOpenModal = event => {
+    const imageInModale = event.target.dataset.url;
+    setImageInModal(imageInModale);
   };
   
-  onCloseModal = () => {
-    this.setState({ imageInModal: null });
+  const onCloseModal = () => {
+    setImageInModal(null);
  }
-
+  const [imageIn, setImageIn] = useState(0);
   
-  render() {
+
+  /*
    const {
       images,
       page,
@@ -92,7 +100,7 @@ export class App extends Component {
       isLoading,
       imageInModal,
       imagesQuantity,
-    } = this.state;
+    } = this.state; */
   return (
     <div
   style={{
@@ -102,15 +110,14 @@ export class App extends Component {
   paddingBottom: '24px'
 }}
     >
-      <Searchbar onSubmit={this.onSubmit} />
+      <Searchbar onSubmit={onSubmit} />
       {isLoading && <Loader />}
-      {<ImageGallery images={images} openModal={this.onOpenModal} />}
-      {page < imagesQuantity / 12 && !isLoading && !error && (
-        <Button nextPage={this.nextPage} />)}
+      {<ImageGallery images={images} openModal={onOpenModal} />}
+      {page < imageIn / 12 && !isLoading && !error && (
+        <Button nextPage={nextPage} />)}
       {imageInModal && (
-          <Modal url={imageInModal} closeModal={this.onCloseModal} />
+          <Modal url={imageInModal} closeModal={onCloseModal} />
         )}
     </div>
   );
   };
-   }

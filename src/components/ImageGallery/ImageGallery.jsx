@@ -3,7 +3,7 @@ import { ImgGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import css from "./ImageGallery.module.css";
 
 export const ImageGallery = ({ images, openModal }) => {
-   
+   console.log(images)
   return (
     <ul className={css.image_gallery} onClick={event => openModal(event)}>
       {images.map(image => (
