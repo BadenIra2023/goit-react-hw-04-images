@@ -38,7 +38,7 @@ const onSubmit = query => {
   useEffect(() => {
     const getImages = async () => {
      if (query === "") { return; }
-   /* setNotFound(false); */
+    setNotFound(false); 
     setError(null);
     setIsLoading(true);
     try {
