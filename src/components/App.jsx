@@ -38,7 +38,7 @@ const onSubmit = query => {
   useEffect(() => {
     const getImages = async () => {
      if (query === "") { return; }
-    setNotFound(false);
+   /* setNotFound(false); */
     setError(null);
     setIsLoading(true);
     try {
@@ -57,7 +57,7 @@ const onSubmit = query => {
         if (page === 1) {
           Notiflix.Notify.success(`Hooray! We found ${imagesQuantity} images.`);
           const www = Math.ceil(imagesQuantity / 12)
-          setTotalPage( www );
+          setTotalPage(www);
          };
       if (page < totalPage) {
         Notiflix.Notify.success(`Hooray! We found ${imagesQuantity} images. Still available for viewing ${imagesQuantity-12*page}`)
@@ -71,9 +71,10 @@ const onSubmit = query => {
       setError(error); console.log(error)}
     finally {
       setIsLoading(false);
+    };
     }
-    }
-    getImages();}, [query, page]);
+    getImages();
+  }, [query, page, notFound, totalPage]);
   const nextPage = () => {
     setPage(page + 1);
   /*  console.log(page) */
