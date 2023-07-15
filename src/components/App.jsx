@@ -37,7 +37,7 @@ const onSubmit = query => {
   
   useEffect(() => {
     if (query === "") { return; }
-  getImages(query, page);}, [query, page]);
+  
   
   
   const getImages = async (query, page) => {
@@ -75,7 +75,8 @@ const onSubmit = query => {
     finally {
       setIsLoading(false);
     }
-  }
+    }
+    getImages(query, page);}, [query, page]);
   const nextPage = () => {
     setPage(page + 1);
   /*  console.log(page) */
